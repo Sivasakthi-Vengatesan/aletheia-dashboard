@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALETHEIA // Evidence Integrity & Recovery Layer for SerpApi</title>
+  
+  <!-- Bitmap & Crisp Typography: Courier Prime, Silkscreen, VT323, Geneva/Verdana -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Silkscreen:wght@400;700&family=VT323&family=Geneva&family=Verdana:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Hardware CRT Bezel Wrapper (16px #282725 with 8px radius) -->
+  <div id="crt-bezel">
+    <div id="desktop-viewport" class="dither-pattern-1">
+      
+      <!-- Top System Menu Bar (32px) -->
+      <header id="system-menu-bar">
+        <div class="menu-left">
+          <!-- ALETHEIA Brand Logo Menu -->
+          <div class="menu-item menu-logo" id="menu-aletheia" tabindex="0" aria-label="ALETHEIA System Menu">
+            <svg class="bitmap-icon-logo" viewBox="0 0 16 16" width="16" height="16">
+              <!-- Geometric 1-Bit Sigma / Scale of Truth Glyphs -->
+              <path fill="currentColor" d="M2 2h12v2H6l4 4-4 4h8v2H2v-2l5-4-5-4V2z"/>
+            </svg>
+            <span class="brand-text">ALETHEIA</span>
+            <!-- Dropdown Menu -->
+            <div class="menu-dropdown" id="dropdown-aletheia">
+              <div class="dropdown-item" data-action="about">About ALETHEIA Gateway...</div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="mcp-status">MCP Gateway Endpoint [8000]</div>
+              <div class="dropdown-item" data-action="kafka-status">Kafka Topic: aletheia.retrieval</div>
+              <div class="dropdown-item" data-action="spark-status">Spark Streaming: Active</div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="calculator">Desk Calculator</div>
+              <div class="dropdown-item" data-action="sound-test">Play Verification Chime</div>
+            </div>
+          </div>
+
+          <div class="menu-item" id="menu-file" tabindex="0">
+            <span class="menu-label">File</span>
+            <div class="menu-dropdown">
+              <div class="dropdown-item" data-action="new-query">New Retrieval Query<span class="menu-shortcut">&#8984;N</span></div>
+              <div class="dropdown-item" data-action="export-evidence">Export Evidence JSON<span class="menu-shortcut">&#8984;E</span></div>
+              <div class="dropdown-item" data-action="view-lineage">Inspect Provenance DAG<span class="menu-shortcut">&#8984;L</span></div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="save-policy">Commit Policies<span class="menu-shortcut">&#8984;S</span></div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="reboot-gateway">Restart MCP Gateway...</div>
+            </div>
+          </div>
+
+          <div class="menu-item" id="menu-view" tabindex="0">
+            <span class="menu-label">View</span>
+            <div class="menu-dropdown">
+              <div class="dropdown-item" data-action="nav-overview">&#9658; 1. Overview</div>
+              <div class="dropdown-item" data-action="nav-search">&#9658; 2. Search Console</div>
+              <div class="dropdown-item" data-action="nav-evidence">&#9658; 3. Evidence Inspector</div>
+              <div class="dropdown-item" data-action="nav-lineage">&#9658; 4. Lineage DAG</div>
+              <div class="dropdown-item" data-action="nav-engines">&#9658; 5. SerpApi Engines</div>
+              <div class="dropdown-item" data-action="nav-telemetry">&#9658; 6. Kafka/Spark Telemetry</div>
+              <div class="dropdown-item" data-action="nav-circuits">&#9658; 7. Circuit Control</div>
+              <div class="dropdown-item" data-action="nav-settings">&#9658; 8. Settings</div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="clean-up">Clean Up Desktop</div>
+            </div>
+          </div>
+
+          <div class="menu-item" id="menu-search-ops" tabindex="0">
+            <span class="menu-label">Search</span>
+            <div class="menu-dropdown">
+              <div class="dropdown-item" data-action="run-demo-1">Run Scenario 1: Escalation &amp; Quorum</div>
+              <div class="dropdown-item" data-action="run-demo-2">Run Scenario 2: Conflicting Evidence</div>
+              <div class="dropdown-item" data-action="run-demo-3">Run Scenario 3: Empty/Degraded 200 OK</div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="clear-cache">Purge Retrieval Cache</div>
+            </div>
+          </div>
+
+          <div class="menu-item" id="menu-evidence-ops" tabindex="0">
+            <span class="menu-label">Evidence</span>
+            <div class="menu-dropdown">
+              <div class="dropdown-item" data-action="validate-now">Trigger Quorum Validation</div>
+              <div class="dropdown-item" data-action="check-challenges">Run Signature Audit</div>
+              <div class="dropdown-item" data-action="canonicalize-urls">Canonicalize Source URLs</div>
+            </div>
+          </div>
+
+          <div class="menu-item" id="menu-special" tabindex="0">
+            <span class="menu-label">Special</span>
+            <div class="menu-dropdown">
+              <div class="dropdown-item" data-action="crt-flicker">Toggle CRT Scanlines</div>
+              <div class="dropdown-item" data-action="invert-theme">Invert Display (1-Bit)</div>
+              <div class="dropdown-separator"></div>
+              <div class="dropdown-item" data-action="trip-circuit">Simulate Circuit Trip (OPEN)</div>
+              <div class="dropdown-item" data-action="reset-circuit">Reset Circuits (CLOSED)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-right">
+          <!-- 1-Bit Status Indicators (#f37725 Warning, #3685c5 Network, #000000 Disk) -->
+          <div class="status-dots" title="ALETHEIA Telemetry: Warning (#f37725), SerpApi (#3685c5), Kafka Stream (#000000)">
+            <span class="dot dot-orange" id="status-warn" title="Quorum/Degraded Warning"></span>
+            <span class="dot dot-blue" id="status-net" title="SerpApi Gateway Active"></span>
+            <span class="dot dot-black" id="status-disk" title="Kafka Pipeline Streaming"></span>
+          </div>
+          <div class="system-clock" id="system-clock">09:41 AM</div>
+        </div>
+      </header>
+
+      <!-- Desktop Workspace -->
+      <main id="desktop-area">
+        
+        <!-- Right-side Desktop Icons Rail -->
+        <aside id="desktop-icons">
+          <div class="desktop-icon selected" id="icon-gateway" tabindex="0" data-name="ALETHEIA MCP">
+            <div class="icon-art">
+              <!-- 32x32 1-Bit Gateway Node -->
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <rect x="4" y="4" width="24" height="24" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+                <circle cx="16" cy="16" r="6" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+                <line x1="16" y1="4" x2="16" y2="10" stroke="#000000" stroke-width="1.5"/>
+                <line x1="16" y1="22" x2="16" y2="28" stroke="#000000" stroke-width="1.5"/>
+                <line x1="4" y1="16" x2="10" y2="16" stroke="#000000" stroke-width="1.5"/>
+                <line x1="22" y1="16" x2="28" y2="16" stroke="#000000" stroke-width="1.5"/>
+                <circle cx="16" cy="16" r="2" fill="#000000"/>
+              </svg>
+            </div>
+            <div class="icon-caption">ALETHEIA</div>
+          </div>
+
+          <div class="desktop-icon" id="icon-serpapi" tabindex="0" data-name="SerpApi Bridge">
+            <div class="icon-art">
+              <!-- 32x32 1-Bit Search Satellite Engine -->
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <circle cx="14" cy="14" r="8" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+                <line x1="20" y1="20" x2="28" y2="28" stroke="#000000" stroke-width="2.5"/>
+                <rect x="9" y="12" width="10" height="4" fill="#000000"/>
+              </svg>
+            </div>
+            <div class="icon-caption">SerpApi</div>
+          </div>
+
+          <div class="desktop-icon" id="icon-kafka" tabindex="0" data-name="Kafka Stream">
+            <div class="icon-art">
+              <!-- 32x32 1-Bit Streaming Pipeline -->
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <rect x="3" y="6" width="26" height="6" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+                <rect x="3" y="14" width="26" height="6" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+                <rect x="3" y="22" width="26" height="6" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+                <circle cx="9" cy="9" r="1.5" fill="#000000"/>
+                <circle cx="18" cy="17" r="1.5" fill="#000000"/>
+                <circle cx="23" cy="25" r="1.5" fill="#000000"/>
+              </svg>
+            </div>
+            <div class="icon-caption">Kafka Telemetry</div>
+          </div>
+
+          <div class="desktop-icon" id="icon-evidence-vault" tabindex="0" data-name="Evidence DB">
+            <div class="icon-art">
+              <!-- 32x32 1-Bit Hard Disk Vault -->
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <rect x="4" y="6" width="24" height="20" rx="1" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+                <line x1="4" y1="16" x2="28" y2="16" stroke="#000000" stroke-width="1"/>
+                <circle cx="10" cy="21" r="2" fill="#000000"/>
+                <rect x="18" y="20" width="6" height="2" fill="#000000"/>
+                <line x1="8" y1="10" x2="24" y2="10" stroke="#000000" stroke-width="1"/>
+              </svg>
+            </div>
+            <div class="icon-caption">PostgreSQL</div>
+          </div>
+        </aside>
+
+        <!-- Inactive Background Window (Offset by 24px) -->
+        <div class="os-window window-inactive" id="window-background" style="top: 44px; left: calc(50% - 31% - 24px);">
+          <div class="window-titlebar titlebar-inactive">
+            <div class="titlebar-box titlebar-box-inactive"></div>
+            <div class="window-title-text title-inactive">ALETHEIA-MCP-Core_Manifest.json</div>
+            <div class="titlebar-box-spacer"></div>
+          </div>
+          <div class="window-inactive-body">
+            <p class="inactive-text">Gateway Port: 8000 &bull; Protocol: Model Context Protocol (MCP) &bull; SerpApi Engine Adapter: Google, Google News &bull; Reliability Threshold: 0.75 &bull; Telemetry: Kafka + Spark Structured Streaming.</p>
+          </div>
+        </div>
+
+        <!-- Primary Active Window: Centered at ~64% width -->
+        <div class="os-window window-active" id="window-preferences">
+          
+          <!-- 1-Bit Title Bar (32px with 6 horizontal 1px black stripes) -->
+          <div class="window-titlebar" id="main-titlebar">
+            <!-- Square close box (14x14px with 1px border) -->
+            <button class="titlebar-close-box" id="btn-close-window" aria-label="Close Window"></button>
+            
+            <!-- Window Title interrupting stripes -->
+            <div class="window-title-badge">
+              <span class="window-title-text">ALETHEIA // Evidence Reliability Gateway</span>
+            </div>
+            
+            <!-- Square zoom box on right -->
+            <button class="titlebar-zoom-box" id="btn-zoom-window" aria-label="Zoom Window"></button>
+          </div>
+
+          <!-- Preferences Two-Pane Interior -->
+          <div class="preferences-interior">
+            
+            <!-- Left 8-Category Navigation Rail (96px static width) -->
+            <nav class="category-rail" id="category-rail" aria-label="ALETHEIA Navigation Categories">
+              
+              <!-- 1. OVERVIEW -->
+              <button class="category-item active" data-pane="pane-overview" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <rect x="3" y="3" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="13" y="3" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="3" y="13" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="13" y="13" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <rect x="5" y="5" width="4" height="4" fill="currentColor"/>
+                </svg>
+                <span class="category-label">Overview</span>
+              </button>
+
+              <!-- 2. SEARCH -->
+              <button class="category-item" data-pane="pane-search" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>
+                  <line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="category-label">Search</span>
+              </button>
+
+              <!-- 3. EVIDENCE -->
+              <button class="category-item" data-pane="pane-evidence" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <rect x="4" y="3" width="16" height="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="8" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="8" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.5"/>
+                  <polyline points="15,16 17,18 20,14" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="category-label">Evidence</span>
+              </button>
+
+              <!-- 4. LINEAGE -->
+              <button class="category-item" data-pane="pane-lineage" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <circle cx="6" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="18" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="12" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="8" y1="8" x2="11" y2="15" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="16" y1="8" x2="13" y2="15" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="category-label">Lineage</span>
+              </button>
+
+              <!-- 5. ENGINES -->
+              <button class="category-item" data-pane="pane-engines" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <rect x="3" y="4" width="18" height="14" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="7" cy="11" r="2" fill="currentColor"/>
+                  <circle cx="12" cy="11" r="2" fill="currentColor"/>
+                  <circle cx="17" cy="11" r="2" fill="currentColor"/>
+                  <line x1="7" y1="21" x2="17" y2="21" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="category-label">Engines</span>
+              </button>
+
+              <!-- 6. TELEMETRY -->
+              <button class="category-item" data-pane="pane-telemetry" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <rect x="3" y="14" width="4" height="7" fill="currentColor"/>
+                  <rect x="9" y="9" width="4" height="12" fill="currentColor"/>
+                  <rect x="15" y="4" width="4" height="17" fill="currentColor"/>
+                  <line x1="2" y1="21" x2="22" y2="21" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="category-label">Telemetry</span>
+              </button>
+
+              <!-- 7. CIRCUITS -->
+              <button class="category-item" data-pane="pane-circuits" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="12" y1="3" x2="12" y2="8" stroke="currentColor" stroke-width="2"/>
+                  <line x1="12" y1="16" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+                  <line x1="10" y1="8" x2="14" y2="16" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span class="category-label">Circuits</span>
+              </button>
+
+              <!-- 8. SETTINGS -->
+              <button class="category-item" data-pane="pane-settings" tabindex="0">
+                <svg class="category-icon" viewBox="0 0 24 24" width="24" height="24">
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M12 2v3m0 14v3M2 12h3m14 0h3m-3.5-6.5l-2.2 2.2m-8.6 8.6l-2.2 2.2m0-13l2.2 2.2m8.6 8.6l2.2 2.2" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="category-label">Settings</span>
+              </button>
+
+            </nav>
+
+            <!-- Right Scrollable Content Pane Container -->
+            <div class="content-pane-container">
+              <div class="content-pane" id="main-content-pane">
+
+                <!-- ==========================================================
+                     1. PANE: OVERVIEW
+                     ========================================================== -->
+                <section class="pref-pane active" id="pane-overview">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // SYSTEM OVERVIEW</h2>
+                    <span class="section-badge">[GATEWAY ONLINE &bull; 8000]</span>
+                  </div>
+                  <p class="section-desc">An Evidence Integrity &amp; Recovery Layer for SerpApi-Powered AI Agents. Evaluating retrieval quality, quorum, and cross-source consistency.</p>
+
+                  <!-- 1-Bit Operational KPI Cards Grid -->
+                  <div class="kpi-grid">
+                    <div class="kpi-card">
+                      <div class="kpi-label">SYSTEM STATUS</div>
+                      <div class="kpi-value text-verified" id="kpi-sys-status">[VERIFIED]</div>
+                      <div class="kpi-sub">Gateway Healthy &bull; 0 Open Circuits</div>
+                    </div>
+                    <div class="kpi-card">
+                      <div class="kpi-label">ACTIVE RETRIEVALS</div>
+                      <div class="kpi-value" id="kpi-active-sessions">3 SESSIONS</div>
+                      <div class="kpi-sub">Orchestrator Idle / 1 Queue</div>
+                    </div>
+                    <div class="kpi-card">
+                      <div class="kpi-label">VERIFICATION RATE</div>
+                      <div class="kpi-value" id="kpi-verif-rate">91.4%</div>
+                      <div class="kpi-sub">128/140 Satisfied Quorum</div>
+                    </div>
+                    <div class="kpi-card">
+                      <div class="kpi-label">AVG EVIDENCE SCORE</div>
+                      <div class="kpi-value" id="kpi-avg-score">0.88 / 1.0</div>
+                      <div class="kpi-sub">Threshold Policy: &ge; 0.75</div>
+                    </div>
+                    <div class="kpi-card">
+                      <div class="kpi-label">SERPAPI REQUESTS</div>
+                      <div class="kpi-value" id="kpi-serp-reqs">1,428</div>
+                      <div class="kpi-sub">Google (1,120) &bull; News (308)</div>
+                    </div>
+                    <div class="kpi-card">
+                      <div class="kpi-label">ACTIVE CIRCUITS</div>
+                      <div class="kpi-value" id="kpi-circuits-state">3 CLOSED</div>
+                      <div class="kpi-sub">0 Degraded &bull; 0 Tripped</div>
+                    </div>
+                  </div>
+
+                  <!-- Quick Demo Launch Bar -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Quick Scenario Dispatcher</legend>
+                    <div class="scenario-actions">
+                      <button class="bitmap-btn" id="btn-quick-demo-1" title="Test initial weak search with auto-query escalation and final verified quorum">
+                        [DEMO 1] Weak Evidence &rarr; Escalation &rarr; Verified
+                      </button>
+                      <button class="bitmap-btn" id="btn-quick-demo-2" title="Test opposing source claims triggering conflicting status without hallucination">
+                        [DEMO 2] Contradictory Sources &rarr; Conflict Detected
+                      </button>
+                      <button class="bitmap-btn" id="btn-quick-demo-3" title="Test HTTP 200 with empty array / challenge page classifying as DATA_HEALTH=FAILED">
+                        [DEMO 3] HTTP 200 Empty/Captcha &rarr; Degraded Failed
+                      </button>
+                    </div>
+                  </fieldset>
+
+                  <!-- Recent Retrievals Table -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Recent Agent Retrievals &amp; Decisions</legend>
+                    <div class="data-table-wrapper">
+                      <table class="bitmap-table" id="table-recent-retrievals">
+                        <thead>
+                          <tr>
+                            <th>TIME</th>
+                            <th>QUERY INTENT</th>
+                            <th>ENGINE</th>
+                            <th>ATTEMPTS</th>
+                            <th>SCORE</th>
+                            <th>STATE</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody-recent">
+                          <tr class="table-row-clickable" data-query-id="q-101">
+                            <td>09:38:12</td>
+                            <td>Who acquired Mistral AI hardware unit in 2024?</td>
+                            <td>google + news</td>
+                            <td>3 / 3</td>
+                            <td>0.91</td>
+                            <td><span class="status-tag tag-verified">[VERIFIED]</span></td>
+                          </tr>
+                          <tr class="table-row-clickable" data-query-id="q-102">
+                            <td>09:34:45</td>
+                            <td>Stripe valuation secondary tender offer Q2 2024</td>
+                            <td>google</td>
+                            <td>1 / 3</td>
+                            <td>0.86</td>
+                            <td><span class="status-tag tag-verified">[VERIFIED]</span></td>
+                          </tr>
+                          <tr class="table-row-clickable" data-query-id="q-103">
+                            <td>09:29:10</td>
+                            <td>Anthropic Claude 3.5 Opus exact release timestamp</td>
+                            <td>google + news</td>
+                            <td>2 / 3</td>
+                            <td>0.54</td>
+                            <td><span class="status-tag tag-conflict">[CONFLICTING]</span></td>
+                          </tr>
+                          <tr class="table-row-clickable" data-query-id="q-104">
+                            <td>09:21:04</td>
+                            <td>Internal AlphaGenome benchmark weights hash 2024</td>
+                            <td>google</td>
+                            <td>2 / 3</td>
+                            <td>0.28</td>
+                            <td><span class="status-tag tag-insufficient">[INSUFFICIENT]</span></td>
+                          </tr>
+                          <tr class="table-row-clickable" data-query-id="q-105">
+                            <td>09:15:33</td>
+                            <td>Unusual traffic challenge test payload trigger</td>
+                            <td>google</td>
+                            <td>1 / 3</td>
+                            <td>0.12</td>
+                            <td><span class="status-tag tag-degraded">[DEGRADED]</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </fieldset>
+                </section>
+
+                <!-- ==========================================================
+                     2. PANE: SEARCH (RETRIEVAL CONSOLE)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-search">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // RETRIEVAL CONSOLE</h2>
+                    <span class="section-badge">[MCP GATEWAY &bull; /api/search]</span>
+                  </div>
+                  <p class="section-desc">Submit research intents to ALETHEIA. Sits between agent and SerpApi to normalize, score, escalate, and verify evidence before returning.</p>
+
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Agent Request Parameters</legend>
+                    
+                    <div class="form-row">
+                      <label class="form-label" for="search-query-input">Query Intent:</label>
+                      <input type="text" id="search-query-input" class="bitmap-input input-wide" value="Who acquired Company X in 2024?">
+                    </div>
+
+                    <div class="form-row-grid-3">
+                      <div class="form-col">
+                        <label class="form-label-small">Agent ID:</label>
+                        <input type="text" id="input-agent-id" class="bitmap-input" value="agent-langchain-prod-04" readonly>
+                      </div>
+                      <div class="form-col">
+                        <label class="form-label-small">Request UUID:</label>
+                        <input type="text" id="input-request-uuid" class="bitmap-input" value="req-8f4b-22d9a" readonly>
+                      </div>
+                      <div class="form-col">
+                        <label class="form-label-small">SerpApi Engine:</label>
+                        <select id="select-engine" class="bitmap-select">
+                          <option value="google">google (Google Search)</option>
+                          <option value="google_news">google_news (Google News)</option>
+                          <option value="multi" selected>Multi-Engine Escalation</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-row form-row-toggle">
+                      <div class="stepper-wrapper">
+                        <span class="form-label-small">Max Attempts:</span>
+                        <input type="text" class="bitmap-stepper-input" id="stepper-search-attempts" value="3" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-search-attempts" data-min="1" data-max="5" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-search-attempts" data-min="1" data-max="5" data-dir="-1">&#9660;</button>
+                        </div>
+                      </div>
+
+                      <label class="bitmap-checkbox-label">
+                        <input type="checkbox" class="bitmap-checkbox" id="chk-verify-evidence" checked>
+                        <span class="checkbox-custom"></span>
+                        <span>Enforce Strict Evidence Quorum Policy (&ge; 0.75 Score &bull; &ge; 2 Domains)</span>
+                      </label>
+
+                      <!-- Primary Search Action -->
+                      <button class="bitmap-btn btn-primary-double" id="btn-execute-search">
+                        <span class="btn-inner-label">&#9654; DISPATCH SEARCH</span>
+                      </button>
+                    </div>
+                  </fieldset>
+
+                  <!-- Terminal Status Pipeline -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Active Retrieval Pipeline Logs</legend>
+                    <div class="terminal-log-box" id="search-terminal-logs">
+                      <div class="log-line">[00] GATEWAY READY. WAITING FOR AGENT DISPATCH...</div>
+                      <div class="log-line text-muted">[INFO] MCP Server listening on stdio &amp; HTTP port 8000.</div>
+                      <div class="log-line text-muted">[INFO] Connected to SerpApi Gateway Adapter (Base: https://serpapi.com).</div>
+                    </div>
+                  </fieldset>
+
+                  <!-- Retrieval Attempts Escalation Breakdown -->
+                  <fieldset class="pref-group" id="group-attempts-visual" style="display: none;">
+                    <legend class="group-legend">Autonomous Escalation Progression</legend>
+                    <div class="attempts-progression" id="attempts-progression-cards">
+                      <!-- Dynamically rendered attempt cards -->
+                    </div>
+                  </fieldset>
+                </section>
+
+                <!-- ==========================================================
+                     3. PANE: EVIDENCE (EVIDENCE INSPECTOR)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-evidence">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // EVIDENCE INSPECTOR</h2>
+                    <span class="section-badge" id="evidence-header-status">[STATUS: VERIFIED]</span>
+                  </div>
+                  <p class="section-desc">Inspect structural validity, domain diversity, freshness, and quorum consensus. ALETHEIA evaluates retrieval evidence, not absolute truth.</p>
+
+                  <!-- Prominent Verification Decision Banner -->
+                  <div class="decision-banner" id="decision-banner">
+                    <div class="decision-stripe">████████████████████████████████████████████████████████████</div>
+                    <div class="decision-content">
+                      <div class="decision-state" id="banner-decision-state">VERIFIED EVIDENCE</div>
+                      <div class="decision-score" id="banner-decision-score">SCORE: 0.91 / 1.00 &bull; QUORUM SATISFIED</div>
+                      <div class="decision-disclaimer">"Evidence satisfies configured reliability and cross-domain quorum policy. Passed to AI Agent."</div>
+                    </div>
+                    <div class="decision-stripe">████████████████████████████████████████████████████████████</div>
+                  </div>
+
+                  <!-- Multi-Component Evidence Score Breakdown -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Transparent Weighted Score Decomposition</legend>
+                    <div class="score-breakdown-grid">
+                      <div class="score-box">
+                        <div class="score-name">OVERALL</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 91%;"></div></div>
+                        <div class="score-pct">91%</div>
+                      </div>
+                      <div class="score-box">
+                        <div class="score-name">STRUCTURE (20%)</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 100%;"></div></div>
+                        <div class="score-pct">100%</div>
+                      </div>
+                      <div class="score-box">
+                        <div class="score-name">DIVERSITY (15%)</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 83%;"></div></div>
+                        <div class="score-pct">83%</div>
+                      </div>
+                      <div class="score-box">
+                        <div class="score-name">RELEVANCE (15%)</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 94%;"></div></div>
+                        <div class="score-pct">94%</div>
+                      </div>
+                      <div class="score-box">
+                        <div class="score-name">FRESHNESS (10%)</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 88%;"></div></div>
+                        <div class="score-pct">88%</div>
+                      </div>
+                      <div class="score-box">
+                        <div class="score-name">AGREEMENT (15%)</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 92%;"></div></div>
+                        <div class="score-pct">92%</div>
+                      </div>
+                      <div class="score-box">
+                        <div class="score-name">URL QUALITY (10%)</div>
+                        <div class="score-bar-frame"><div class="score-bar-fill" style="width: 100%;"></div></div>
+                        <div class="score-pct">100%</div>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <!-- Validation Checklist & Quorum Overview -->
+                  <div class="two-col-pref">
+                    <fieldset class="pref-group flex-1">
+                      <legend class="group-legend">Validation Quality Gates</legend>
+                      <ul class="checklist-1bit">
+                        <li><span class="check-box-1bit">&#10003;</span> STRUCTURE VALID (All Required Fields Present)</li>
+                        <li><span class="check-box-1bit">&#10003;</span> CANONICAL URL VALIDATED (Tracking Stripped)</li>
+                        <li><span class="check-box-1bit">&#10003;</span> ZERO CHALLENGE SIGNATURES DETECTED</li>
+                        <li><span class="check-box-1bit">&#10003;</span> DUPLICATE SYNDICATION DEDUPLICATED</li>
+                        <li><span class="check-box-1bit">&#10003;</span> CONTENT DENSITY &ge; 140 CHARACTERS</li>
+                        <li><span class="check-box-1bit">&#10003;</span> FRESHNESS RECENCY VERIFIED (2024)</li>
+                      </ul>
+                    </fieldset>
+
+                    <fieldset class="pref-group flex-1">
+                      <legend class="group-legend">Quorum &amp; Domain Diversity</legend>
+                      <div class="quorum-metric-row">
+                        <span>Independent Valid Sources:</span>
+                        <strong>4 Sources</strong>
+                      </div>
+                      <div class="quorum-metric-row">
+                        <span>Unique Canonical Domains:</span>
+                        <strong>3 Domains (reuters.com, techcrunch.com, bloomberg.com)</strong>
+                      </div>
+                      <div class="quorum-metric-row">
+                        <span>Domain Concentration Ratio:</span>
+                        <strong>0.25 (Low - Safe)</strong>
+                      </div>
+                      <div class="quorum-metric-row">
+                        <span>Quorum Policy Status:</span>
+                        <strong class="text-verified">&#10003; SATISFIED (&ge; 2 Independent Domains)</strong>
+                      </div>
+                    </fieldset>
+                  </div>
+
+                  <!-- Normalized Evidence Source Cards -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Normalized Evidence Corpus</legend>
+                    <div class="evidence-cards-list" id="evidence-cards-list">
+                      
+                      <!-- Card 1 -->
+                      <div class="evidence-card">
+                        <div class="card-top">
+                          <span class="card-rank">#01 [SUPPORTS CLAIM]</span>
+                          <span class="card-domain">reuters.com</span>
+                          <span class="card-engine">SerpApi Engine: google</span>
+                          <span class="card-score">Score: 0.94</span>
+                        </div>
+                        <h4 class="card-title">Corporation Alpha Completes Acquisition of Company X in $1.2B Deal</h4>
+                        <div class="card-snippet">"LONDON/NEW YORK, Feb 14 (Reuters) - Corporation Alpha has finalized its takeover of artificial intelligence pioneer Company X for an estimated enterprise value of $1.2 billion..."</div>
+                        <div class="card-meta">
+                          <span>URL: https://reuters.com/markets/deals/alpha-completes-company-x-2024-02-14/</span>
+                          <span>Lineage Hash: <code>7f8a3c...19b2</code></span>
+                        </div>
+                      </div>
+
+                      <!-- Card 2 -->
+                      <div class="evidence-card">
+                        <div class="card-top">
+                          <span class="card-rank">#02 [SUPPORTS CLAIM]</span>
+                          <span class="card-domain">techcrunch.com</span>
+                          <span class="card-engine">SerpApi Engine: google_news</span>
+                          <span class="card-score">Score: 0.89</span>
+                        </div>
+                        <h4 class="card-title">Company X Acquired by Corporation Alpha to Expand Enterprise Agent Stack</h4>
+                        <div class="card-snippet">"The multi-year saga concluded this morning as Company X CEO confirmed the acquisition by Corporation Alpha in an internal memo filed with regulatory authorities..."</div>
+                        <div class="card-meta">
+                          <span>URL: https://techcrunch.com/2024/02/14/company-x-alpha-merger/</span>
+                          <span>Lineage Hash: <code>b3d14e...99c4</code></span>
+                        </div>
+                      </div>
+
+                      <!-- Card 3 -->
+                      <div class="evidence-card">
+                        <div class="card-top">
+                          <span class="card-rank">#03 [DUPLICATE SYNDICATED]</span>
+                          <span class="card-domain">finance-syndicate-mirror.net</span>
+                          <span class="card-engine">SerpApi Engine: google</span>
+                          <span class="card-score">Score: 0.42 (Ignored for Quorum)</span>
+                        </div>
+                        <h4 class="card-title">Corporation Alpha Completes Acquisition of Company X in $1.2B Deal</h4>
+                        <div class="card-snippet">"(Reuters Syndication Mirror) - Corporation Alpha has finalized its takeover of artificial intelligence pioneer Company X..."</div>
+                        <div class="card-meta">
+                          <span>Status: Filtered as syndicated mirror of Reuters. Does not count as independent confirmation.</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </fieldset>
+                </section>
+
+                <!-- ==========================================================
+                     4. PANE: LINEAGE (PROVENANCE DAG)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-lineage">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // EVIDENCE LINEAGE</h2>
+                    <span class="section-badge">[PROVENANCE DAG &bull; SHA256]</span>
+                  </div>
+                  <p class="section-desc">Complete cryptographic traceability from agent intent through SerpApi retrieval, validation, and quorum verification. Click any node to inspect register state.</p>
+
+                  <!-- Interactive Lineage DAG Flowchart -->
+                  <div class="lineage-dag-container">
+                    <div class="dag-row">
+                      <button class="dag-node" data-node="agent-query">
+                        <span class="node-id">01</span>
+                        <span class="node-label">AGENT QUERY</span>
+                        <span class="node-sub">"Who acquired Company X?"</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="mcp-gateway">
+                        <span class="node-id">02</span>
+                        <span class="node-label">ALETHEIA MCP</span>
+                        <span class="node-sub">req-8f4b-22d9a</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="orchestrator">
+                        <span class="node-id">03</span>
+                        <span class="node-label">ORCHESTRATOR</span>
+                        <span class="node-sub">Multi-Engine Selector</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="serpapi-client">
+                        <span class="node-id">04</span>
+                        <span class="node-label">SERPAPI CALL</span>
+                        <span class="node-sub">HTTP 200 &bull; 12 Items</span>
+                      </button>
+                    </div>
+
+                    <div class="dag-vertical-link">&darr;</div>
+
+                    <div class="dag-row">
+                      <button class="dag-node" data-node="normalizer">
+                        <span class="node-id">05</span>
+                        <span class="node-label">NORMALIZATION</span>
+                        <span class="node-sub">Schema Conformance</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="validator">
+                        <span class="node-id">06</span>
+                        <span class="node-label">VALIDATION GATES</span>
+                        <span class="node-sub">URL / Challenge / Dup</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="scorer">
+                        <span class="node-id">07</span>
+                        <span class="node-label">EVIDENCE SCORING</span>
+                        <span class="node-sub">Weighted Score: 0.91</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="quorum">
+                        <span class="node-id">08</span>
+                        <span class="node-label">QUORUM ENGINE</span>
+                        <span class="node-sub">3 Agreeing Domains</span>
+                      </button>
+                    </div>
+
+                    <div class="dag-vertical-link">&darr;</div>
+
+                    <div class="dag-row">
+                      <button class="dag-node node-highlight" data-node="decision">
+                        <span class="node-id">09</span>
+                        <span class="node-label">FINAL DECISION</span>
+                        <span class="node-sub">[VERIFIED EVIDENCE]</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="agent-response">
+                        <span class="node-id">10</span>
+                        <span class="node-label">AGENT CONTEXT</span>
+                        <span class="node-sub">Grounding Delivered</span>
+                      </button>
+                      <span class="dag-arrow">&rarr;</span>
+                      <button class="dag-node" data-node="kafka-telemetry">
+                        <span class="node-id">11</span>
+                        <span class="node-label">KAFKA TELEMETRY</span>
+                        <span class="node-sub">Topic Event Emitted</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Selected Node Inspector Box -->
+                  <fieldset class="pref-group" id="node-inspector-box">
+                    <legend class="group-legend" id="inspector-legend">Node Inspector: [07] EVIDENCE SCORING</legend>
+                    <div class="inspector-content" id="inspector-details">
+                      <div class="inspector-row"><span>Canonical Lineage SHA-256:</span> <code>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code></div>
+                      <div class="inspector-row"><span>Engine Source:</span> <code>serpapi.google + serpapi.google_news</code></div>
+                      <div class="inspector-row"><span>Retrieved Timestamp:</span> <code>2024-09-23T21:40:12.482Z</code></div>
+                      <div class="inspector-row"><span>Validation Status:</span> <code>STRUCTURE_VALID | URL_CANONICALIZED | NO_CHALLENGE</code></div>
+                      <div class="inspector-row"><span>Quorum Consensus:</span> <code>SATISFIED (3 independent publications confirm claim)</code></div>
+                    </div>
+                  </fieldset>
+                </section>
+
+                <!-- ==========================================================
+                     5. PANE: ENGINES (SERPAPI ENGINE MONITOR)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-engines">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // SERPAPI ENGINES</h2>
+                    <span class="section-badge">[API ADAPTER: HEALTHY]</span>
+                  </div>
+                  <p class="section-desc">Observed retrieval-path telemetry and health metrics across configured SerpApi engine providers. Isolated via dedicated adapter layer.</p>
+
+                  <div class="engine-cards-grid">
+                    
+                    <!-- Engine 1: Google Search -->
+                    <div class="engine-card">
+                      <div class="engine-header">
+                        <span class="engine-name">GOOGLE SEARCH</span>
+                        <span class="engine-status status-closed">[CIRCUIT: CLOSED]</span>
+                      </div>
+                      <div class="engine-body">
+                        <div class="engine-metric"><span>Engine ID:</span> <code>google</code></div>
+                        <div class="engine-metric"><span>Health Score:</span> <strong>94.2%</strong></div>
+                        <div class="engine-metric"><span>Total Requests:</span> <strong>1,120</strong></div>
+                        <div class="engine-metric"><span>Avg Latency:</span> <strong>384 ms</strong></div>
+                        <div class="engine-metric"><span>Empty Result Rate:</span> <strong>2.1%</strong></div>
+                        <div class="engine-metric"><span>Challenge Rate:</span> <strong>0.4%</strong></div>
+                        <div class="engine-metric"><span>Avg Evidence Score:</span> <strong>0.89</strong></div>
+                        <div class="engine-metric"><span>Last Request:</span> <strong>2s ago</strong></div>
+                      </div>
+                    </div>
+
+                    <!-- Engine 2: Google News -->
+                    <div class="engine-card">
+                      <div class="engine-header">
+                        <span class="engine-name">GOOGLE NEWS</span>
+                        <span class="engine-status status-closed">[CIRCUIT: CLOSED]</span>
+                      </div>
+                      <div class="engine-body">
+                        <div class="engine-metric"><span>Engine ID:</span> <code>google_news</code></div>
+                        <div class="engine-metric"><span>Health Score:</span> <strong>91.8%</strong></div>
+                        <div class="engine-metric"><span>Total Requests:</span> <strong>308</strong></div>
+                        <div class="engine-metric"><span>Avg Latency:</span> <strong>412 ms</strong></div>
+                        <div class="engine-metric"><span>Empty Result Rate:</span> <strong>4.8%</strong></div>
+                        <div class="engine-metric"><span>Challenge Rate:</span> <strong>0.0%</strong></div>
+                        <div class="engine-metric"><span>Avg Evidence Score:</span> <strong>0.85</strong></div>
+                        <div class="engine-metric"><span>Last Request:</span> <strong>14s ago</strong></div>
+                      </div>
+                    </div>
+
+                    <!-- Engine 3: Google Scholar -->
+                    <div class="engine-card">
+                      <div class="engine-header">
+                        <span class="engine-name">GOOGLE SCHOLAR</span>
+                        <span class="engine-status status-closed">[CIRCUIT: CLOSED]</span>
+                      </div>
+                      <div class="engine-body">
+                        <div class="engine-metric"><span>Engine ID:</span> <code>google_scholar</code></div>
+                        <div class="engine-metric"><span>Health Score:</span> <strong>88.5%</strong></div>
+                        <div class="engine-metric"><span>Total Requests:</span> <strong>94</strong></div>
+                        <div class="engine-metric"><span>Avg Latency:</span> <strong>520 ms</strong></div>
+                        <div class="engine-metric"><span>Empty Result Rate:</span> <strong>6.2%</strong></div>
+                        <div class="engine-metric"><span>Challenge Rate:</span> <strong>1.1%</strong></div>
+                        <div class="engine-metric"><span>Avg Evidence Score:</span> <strong>0.82</strong></div>
+                        <div class="engine-metric"><span>Last Request:</span> <strong>1m ago</strong></div>
+                      </div>
+                    </div>
+
+                    <!-- Engine 4: Custom Enterprise Engine -->
+                    <div class="engine-card">
+                      <div class="engine-header">
+                        <span class="engine-name">FALLBACK RETRIEVAL</span>
+                        <span class="engine-status status-half">[HALF-OPEN]</span>
+                      </div>
+                      <div class="engine-body">
+                        <div class="engine-metric"><span>Engine ID:</span> <code>custom_fallback</code></div>
+                        <div class="engine-metric"><span>Health Score:</span> <strong>64.0%</strong></div>
+                        <div class="engine-metric"><span>Total Requests:</span> <strong>18</strong></div>
+                        <div class="engine-metric"><span>Avg Latency:</span> <strong>890 ms</strong></div>
+                        <div class="engine-metric"><span>Empty Result Rate:</span> <strong>22.0%</strong></div>
+                        <div class="engine-metric"><span>Challenge Rate:</span> <strong>0.0%</strong></div>
+                        <div class="engine-metric"><span>Avg Evidence Score:</span> <strong>0.58</strong></div>
+                        <div class="engine-metric"><span>Last Request:</span> <strong>12m ago</strong></div>
+                      </div>
+                    </div>
+
+                  </div>
+                </section>
+
+                <!-- ==========================================================
+                     6. PANE: TELEMETRY (KAFKA + SPARK STREAMING)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-telemetry">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // RETRIEVAL TELEMETRY</h2>
+                    <span class="section-badge">[KAFKA + SPARK STRUCTURED STREAMING]</span>
+                  </div>
+                  <p class="section-desc">Streaming analytics pipeline aggregating rolling retrieval metrics over 5-minute tumbling windows with 1-minute slide.</p>
+
+                  <div class="telemetry-arch-badge">
+                    <code>SERPAPI &rarr; KAFKA (aletheia.retrieval.telemetry) &rarr; SPARK STRUCTURED STREAMING &rarr; ROLLING HEALTH METRICS</code>
+                  </div>
+
+                  <!-- 1-Bit Histogram Chart 1: Latency & Requests -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Retrieval Latency Histogram (Last 30 Windows)</legend>
+                    <div class="chart-1bit-container">
+                      <div class="chart-1bit-bars" id="chart-latency-bars">
+                        <!-- Filled with 1-bit bars via JavaScript -->
+                      </div>
+                      <div class="chart-meta-row">
+                        <span>P50 Latency: <strong>384 ms</strong></span>
+                        <span>P95 Latency: <strong>640 ms</strong></span>
+                        <span>Throughput: <strong>24 req/min</strong></span>
+                        <span>Topic: <code>aletheia.retrieval.telemetry</code></span>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <!-- 1-Bit Histogram Chart 2: Rolling Evidence Score -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Rolling Evidence Quality &amp; Degraded Rate</legend>
+                    <div class="chart-1bit-container">
+                      <div class="chart-1bit-bars" id="chart-quality-bars">
+                        <!-- Filled with 1-bit bars via JavaScript -->
+                      </div>
+                      <div class="chart-meta-row">
+                        <span>Average Score: <strong>0.88</strong></span>
+                        <span>Degraded Payload Rate: <strong>1.8%</strong></span>
+                        <span>Empty Result Rate: <strong>2.4%</strong></span>
+                        <span>Quorum Pass Rate: <strong>91.4%</strong></span>
+                      </div>
+                    </div>
+                  </fieldset>
+                </section>
+
+                <!-- ==========================================================
+                     7. PANE: CIRCUITS (CIRCUIT CONTROL)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-circuits">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // CIRCUIT CONTROL</h2>
+                    <span class="section-badge">[DATA QUALITY CIRCUIT BREAKER]</span>
+                  </div>
+                  <p class="section-desc">Protects AI agents by automatically isolating degraded retrieval paths based on data quality (empty responses, challenges, low scores), not just HTTP errors.</p>
+
+                  <!-- Circuit States Explanation -->
+                  <div class="circuit-state-explainer">
+                    <div class="state-col">
+                      <span class="state-badge-1bit">[CLOSED]</span>
+                      <p>Normal operation. Retrieval evidence healthy and quorum reachable.</p>
+                    </div>
+                    <div class="state-col">
+                      <span class="state-badge-1bit">[HALF-OPEN]</span>
+                      <p>Testing recovery. Limited canary requests permitted to verify health.</p>
+                    </div>
+                    <div class="state-col">
+                      <span class="state-badge-1bit">[OPEN]</span>
+                      <p>Retrieval path temporarily avoided due to severe degradation.</p>
+                    </div>
+                  </div>
+
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Configurable Quality Breaker Thresholds</legend>
+                    
+                    <div class="form-row">
+                      <label class="form-label">Failure Score Threshold:</label>
+                      <div class="stepper-wrapper">
+                        <input type="text" class="bitmap-stepper-input" id="stepper-circuit-score" value="0.40" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-circuit-score" data-min="0.10" data-max="0.90" data-step="0.05" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-circuit-score" data-min="0.10" data-max="0.90" data-step="0.05" data-dir="-1">&#9660;</button>
+                        </div>
+                        <span class="stepper-hint">(Trip if rolling quality &lt; 0.40)</span>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label">Challenge Rate Limit:</label>
+                      <div class="stepper-wrapper">
+                        <input type="text" class="bitmap-stepper-input" id="stepper-circuit-challenge" value="0.50" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-circuit-challenge" data-min="0.10" data-max="1.0" data-step="0.10" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-circuit-challenge" data-min="0.10" data-max="1.0" data-step="0.10" data-dir="-1">&#9660;</button>
+                        </div>
+                        <span class="stepper-hint">(Trip if challenges &gt; 50%)</span>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label">Cooldown Seconds:</label>
+                      <div class="stepper-wrapper">
+                        <input type="text" class="bitmap-stepper-input" id="stepper-circuit-cooldown" value="60" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-circuit-cooldown" data-min="10" data-max="300" data-step="10" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-circuit-cooldown" data-min="10" data-max="300" data-step="10" data-dir="-1">&#9660;</button>
+                        </div>
+                        <span class="stepper-hint">Seconds before entering HALF-OPEN</span>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Manual Override Controls</legend>
+                    <div class="scenario-actions">
+                      <button class="bitmap-btn" id="btn-force-open-circuit">Force Open Google Circuit (Trip)</button>
+                      <button class="bitmap-btn" id="btn-force-half-circuit">Set Google Circuit to HALF-OPEN</button>
+                      <button class="bitmap-btn" id="btn-force-close-circuit">Reset All Circuits (CLOSED)</button>
+                    </div>
+                  </fieldset>
+                </section>
+
+                <!-- ==========================================================
+                     8. PANE: SETTINGS (RETRO PREFERENCES & POLICIES)
+                     ========================================================== -->
+                <section class="pref-pane" id="pane-settings">
+                  <div class="pane-header-row">
+                    <h2 class="section-title">ALETHEIA // SYSTEM PREFERENCES &amp; POLICIES</h2>
+                    <span class="section-badge">[CONTROL PANEL]</span>
+                  </div>
+                  <p class="section-desc">Manage workstation hardware emulation, 1-bit dither wallpaper matrix, audio synthesizer feedback, and core ALETHEIA reliability thresholds.</p>
+
+                  <!-- ALETHEIA Verification Policy -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">ALETHEIA Verification Policy</legend>
+                    
+                    <div class="form-row">
+                      <label class="form-label">Min Evidence Score:</label>
+                      <div class="stepper-wrapper">
+                        <input type="text" class="bitmap-stepper-input" id="stepper-min-score" value="0.75" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-min-score" data-min="0.50" data-max="0.95" data-step="0.05" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-min-score" data-min="0.50" data-max="0.95" data-step="0.05" data-dir="-1">&#9660;</button>
+                        </div>
+                        <span class="stepper-hint">(Default: 0.75)</span>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label">Min Independent Sources:</label>
+                      <div class="stepper-wrapper">
+                        <input type="text" class="bitmap-stepper-input" id="stepper-min-sources" value="2" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-min-sources" data-min="1" data-max="5" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-min-sources" data-min="1" data-max="5" data-dir="-1">&#9660;</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label">Min Unique Domains:</label>
+                      <div class="stepper-wrapper">
+                        <input type="text" class="bitmap-stepper-input" id="stepper-min-domains" value="2" readonly>
+                        <div class="stepper-buttons">
+                          <button class="stepper-btn stepper-up" data-target="stepper-min-domains" data-min="1" data-max="5" data-dir="1">&#9650;</button>
+                          <button class="stepper-btn stepper-down" data-target="stepper-min-domains" data-min="1" data-max="5" data-dir="-1">&#9660;</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label">Autonomous Escalation:</label>
+                      <label class="bitmap-checkbox-label">
+                        <input type="checkbox" class="bitmap-checkbox" id="chk-escalate-enabled" checked>
+                        <span class="checkbox-custom"></span>
+                        <span>Auto-escalate queries when first SerpApi retrieval is insufficient</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  <!-- Desktop 4x4 Dither Matrix Wallpaper -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Desktop 4x4 Dither Pattern Matrix</legend>
+                    <div class="dither-matrix-picker" id="dither-picker">
+                      <button class="dither-swatch active dither-pat-1" data-pattern="dither-pattern-1" title="Classic 50% Checkerboard">
+                        <span class="swatch-label">Classic 50%</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-2" data-pattern="dither-pattern-2" title="Fine 25% Stipple">
+                        <span class="swatch-label">Fine 25%</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-3" data-pattern="dither-pattern-3" title="Dense 75% Grid">
+                        <span class="swatch-label">Dense 75%</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-4" data-pattern="dither-pattern-4" title="Diagonal 45&deg; Lines">
+                        <span class="swatch-label">Diagonal 45&deg;</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-5" data-pattern="dither-pattern-5" title="Crosshatch Weave">
+                        <span class="swatch-label">Crosshatch</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-6" data-pattern="dither-pattern-6" title="Horizontal 1px Stripes">
+                        <span class="swatch-label">1px Stripes</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-7" data-pattern="dither-pattern-7" title="Bayer Matrix 4x4">
+                        <span class="swatch-label">Bayer 4x4</span>
+                      </button>
+                      <button class="dither-swatch dither-pat-8" data-pattern="dither-pattern-8" title="Solid White">
+                        <span class="swatch-label">Solid White</span>
+                      </button>
+                    </div>
+                  </fieldset>
+
+                  <!-- 1-Bit Web Audio Synthesizer Controls -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">Speaker &amp; Audio Feedback</legend>
+                    <div class="form-row">
+                      <label class="form-label">Synthesizer Volume:</label>
+                      <div class="slider-wrapper">
+                        <span class="slider-end-label">0</span>
+                        <div class="bitmap-slider-track" id="slider-vol-track">
+                          <div class="bitmap-slider-thumb" id="slider-vol-thumb" style="left: 70%;"></div>
+                        </div>
+                        <span class="slider-end-label">7</span>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label">Mute Speaker:</label>
+                      <label class="bitmap-checkbox-label">
+                        <input type="checkbox" class="bitmap-checkbox" id="chk-mute-sound">
+                        <span class="checkbox-custom"></span>
+                        <span>Flash menu bar instead of audible chime</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  <!-- CRT & Hardware Emulation -->
+                  <fieldset class="pref-group">
+                    <legend class="group-legend">CRT Display Hardware Emulation</legend>
+                    <div class="form-row">
+                      <label class="form-label">CRT Scanlines:</label>
+                      <label class="bitmap-checkbox-label">
+                        <input type="checkbox" class="bitmap-checkbox" id="chk-crt-scanlines">
+                        <span class="checkbox-custom"></span>
+                        <span>Enable subtle CRT horizontal raster scanlines</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                </section>
+
+              </div>
+
+              <!-- Custom 1-Bit System Scrollbar (20px wide) -->
+              <div class="system-scrollbar" id="custom-scrollbar">
+                <button class="scrollbar-btn scrollbar-up" id="scroll-up" aria-label="Scroll Up">&#9650;</button>
+                <div class="scrollbar-trough" id="scroll-trough">
+                  <div class="scrollbar-thumb" id="scroll-thumb"></div>
+                </div>
+                <button class="scrollbar-btn scrollbar-down" id="scroll-down" aria-label="Scroll Down">&#9660;</button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Advanced Collapsible Drawer -->
+          <div class="advanced-drawer" id="advanced-drawer">
+            <div class="drawer-header">
+              <span class="drawer-title">ALETHEIA MCP Core Registers &amp; Kafka Telemetry Feed</span>
+              <span class="drawer-status">MCP Version: 1.0 &bull; SerpApi Gateway: Ready</span>
+            </div>
+            <div class="hex-dump-terminal">
+              <code>0x0000: 41 4C 45 54 48 45 49 41  20 53 45 52 50 41 50 49  |ALETHEIA SERPAPI|</code>
+              <code>0x0010: 20 45 56 49 44 45 4E 43  45 20 51 55 4F 52 55 4D  | EVIDENCE QUORUM|</code>
+              <code>0x0020: 20 50 4F 4C 49 43 59 20  30 2E 37 35 20 50 41 53  | POLICY 0.75 PAS|</code>
+              <code>0x0030: 53 20 4B 41 46 4B 41 20  53 54 52 45 41 4D 00 FF  |S KAFKA STREAM..|</code>
+            </div>
+          </div>
+
+          <!-- Window Footer (48px) -->
+          <footer class="window-footer">
+            <div class="footer-left">
+              <button class="disclosure-toggle" id="btn-disclosure-advanced" aria-expanded="false">
+                <span class="disclosure-arrow" id="disclosure-arrow">&#9654;</span>
+                <span class="disclosure-label">Gateway Registers</span>
+              </button>
+            </div>
+            <div class="footer-right">
+              <button class="bitmap-btn btn-secondary" id="btn-revert">Revert Policies</button>
+              <!-- Primary Save Button with Classic Double Border -->
+              <button class="bitmap-btn btn-primary-double" id="btn-save">
+                <span class="btn-inner-label">Commit Policy</span>
+              </button>
+            </div>
+          </footer>
+
+        </div>
+
+        <!-- Desk Calculator Floating Modal -->
+        <div class="os-window os-modal" id="modal-calculator" style="display: none; top: 110px; left: 80px; width: 220px;">
+          <div class="window-titlebar">
+            <button class="titlebar-close-box modal-close" data-modal="modal-calculator"></button>
+            <div class="window-title-badge">
+              <span class="window-title-text">Desk Calculator</span>
+            </div>
+            <div class="titlebar-box-spacer"></div>
+          </div>
+          <div class="calc-body">
+            <input type="text" class="calc-display" id="calc-display" value="0" readonly>
+            <div class="calc-grid">
+              <button class="calc-key" data-key="C">C</button>
+              <button class="calc-key" data-key="+/-">&plusmn;</button>
+              <button class="calc-key" data-key="%">%</button>
+              <button class="calc-key" data-key="/">/</button>
+              <button class="calc-key" data-key="7">7</button>
+              <button class="calc-key" data-key="8">8</button>
+              <button class="calc-key" data-key="9">9</button>
+              <button class="calc-key" data-key="*">*</button>
+              <button class="calc-key" data-key="4">4</button>
+              <button class="calc-key" data-key="5">5</button>
+              <button class="calc-key" data-key="6">6</button>
+              <button class="calc-key" data-key="-">-</button>
+              <button class="calc-key" data-key="1">1</button>
+              <button class="calc-key" data-key="2">2</button>
+              <button class="calc-key" data-key="3">3</button>
+              <button class="calc-key" data-key="+">+</button>
+              <button class="calc-key calc-key-wide" data-key="0">0</button>
+              <button class="calc-key" data-key=".">.</button>
+              <button class="calc-key calc-key-equal" data-key="=">=</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lineage Node Details Floating Modal -->
+        <div class="os-window os-modal" id="modal-lineage-detail" style="display: none; top: 140px; left: 240px; width: 440px;">
+          <div class="window-titlebar">
+            <button class="titlebar-close-box modal-close" data-modal="modal-lineage-detail"></button>
+            <div class="window-title-badge">
+              <span class="window-title-text" id="modal-lineage-title">Provenance Node Details</span>
+            </div>
+            <div class="titlebar-box-spacer"></div>
+          </div>
+          <div class="modal-lineage-body" id="modal-lineage-body">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- System Notification Toast -->
+        <div class="os-dialog" id="system-toast" style="display: none;">
+          <div class="dialog-icon">&#9888;</div>
+          <div class="dialog-msg" id="toast-msg">ALETHEIA Gateways Configured.</div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
