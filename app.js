@@ -1020,13 +1020,116 @@
   const mainTitlebar = document.getElementById('main-titlebar');
   if (mainWindow && mainTitlebar) makeDraggable(mainWindow, mainTitlebar);
 
-  const calcModal = document.getElementById('modal-calculator');
-  const calcTitlebar = calcModal ? calcModal.querySelector('.window-titlebar') : null;
-  if (calcModal && calcTitlebar) makeDraggable(calcModal, calcTitlebar);
+  // --- 20. KEYBOARD SHORTCUTS & SYSTEM HOTKEYS ---
+  const PANE_KEYS = {
+    '1': 'pane-overview',
+    '2': 'pane-search',
+    '3': 'pane-evidence',
+    '4': 'pane-lineage',
+    '5': 'pane-engines',
+    '6': 'pane-telemetry',
+    '7': 'pane-circuits',
+    '8': 'pane-settings'
+  };
 
-  const lineageModalEl = document.getElementById('modal-lineage-detail');
-  const lineageTitlebar = lineageModalEl ? lineageModalEl.querySelector('.window-titlebar') : null;
-  if (lineageModalEl && lineageTitlebar) makeDraggable(lineageModalEl, lineageTitlebar);
+  function exportEvidenceJSON() {
+    play1BitSound('droplet');
+    const corpusData = {
+      aletheia_version: "1.1.0",
+      exported_at: new Date().toISOString(),
+      policy: {
+        min_score: 0.75,
+        min_domains: 3,
+        quorum_ratio: 0.66,
+        escalation_enabled: true
+      },
+      verified_evidence: [
+        {
+          id: "ev_9a7c2b",
+          claim: "Quantum error correction threshold achieved with surface codes at >99.4% fidelity",
+          confidence_score: 0.94,
+          quorum_agreement: "100%",
+          engine: "google_scholar",
+          lineage_hash: "7f8c9b201a4e5d6f3c2b1a0e9d8c7b6a",
+          status: "VERIFIED"
+        },
+        {
+          id: "ev_8b6a1f",
+          claim: "Neutral atom quantum processors scale past 1,000 physical qubits in 2026",
+          confidence_score: 0.91,
+          quorum_agreement: "83.3%",
+          engine: "google",
+          lineage_hash: "3c2b1a0e9d8c7b6a7f8c9b201a4e5d6f",
+          status: "VERIFIED"
+        }
+      ]
+    };
+
+    const blob = new Blob([JSON.stringify(corpusData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `aletheia-evidence-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    // If active element is an input or textarea, don't intercept standard typing
+    const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea') {
+      if (e.key === 'Escape') {
+        document.activeElement.blur();
+      }
+      return;
+    }
+
+    // Number keys 1-8 for pane switching
+    if (PANE_KEYS[e.key] && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      switchCategory(PANE_KEYS[e.key]);
+      return;
+    }
+
+    // Escape to close modals
+    if (e.key === 'Escape') {
+      if (calcModal && calcModal.classList.contains('active')) {
+        calcModal.classList.remove('active');
+        play1BitSound('clink');
+      }
+      if (lineageModalEl && lineageModalEl.classList.contains('active')) {
+        lineageModalEl.classList.remove('active');
+        play1BitSound('clink');
+      }
+      return;
+    }
+
+    // Command/Control shortcuts
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+        case 'e':
+          e.preventDefault();
+          exportEvidenceJSON();
+          break;
+        case 'l':
+          e.preventDefault();
+          switchCategory('pane-lineage');
+          break;
+        case 's':
+          e.preventDefault();
+          play1BitSound('droplet');
+          flashMenuBar();
+          break;
+        case 'n':
+          e.preventDefault();
+          switchCategory('pane-search');
+          break;
+      }
+    }
+  });
 
   console.log('ALETHEIA 1-Bit Production Environment Initialized.');
 })();
+

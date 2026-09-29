@@ -1,0 +1,27 @@
+{
+  "name": "aletheia-dashboard",
+  "version": "1.1.0",
+  "description": "Evidence Integrity & Recovery Layer for SerpApi-Powered AI Agents with Retro 1-Bit Operational Console",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -l 8080 .",
+    "dev": "serve -l 8080 .",
+    "serve": "serve -l 8080 ."
+  },
+  "keywords": [
+    "serpapi",
+    "mcp",
+    "model-context-protocol",
+    "ai-agents",
+    "evidence-validation",
+    "retrieval-integrity",
+    "retro-ui",
+    "1-bit",
+    "dashboard"
+  ],
+  "author": "Sivasakthi Vengatesan",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
